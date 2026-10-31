@@ -1,0 +1,15 @@
+.venv/
+__pycache__/
+data/
+cache/
+models/*.joblib
+*.parquet
+*.pyc
+.DS_Store
+.pytest_cache/
+models/
+samples/*.wav
+samples/*.aiff
+# local one-off run scripts with machine paths
+scripts/run_round1.sh
+scripts/run_rs_round1.sh
