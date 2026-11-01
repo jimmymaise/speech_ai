@@ -15,7 +15,7 @@ Fits are checked with whole questions held out. Run `python scripts/apeuni_formu
 | Read Aloud score, content 2/5 | (P + F) / 2 × 0.55, rounded | 3 / 3 |
 | Read Aloud score, content 0/5 | 10 | 109 / 109 |
 | Content (0–5) | missed words: 0–5 → 5; 6–7 → 4; 8–9 → 2; ≥ 11 → 0 (10 and levels 1, 3 not seen) | all answers |
-| Fluency (0–90) | function of passage letters per second of reading: PCC 0.90, MAE 6.2 | no closed form |
+| Fluency (0–90) | function of passage letters per second of reading (+ a little sound quality); pauses do not count: PCC 0.90–0.93, MAE 5.3–6.2 | no closed form |
 | Pronunciation (0–90) | ≈ 2.34 × mean sound score + 0.36 × F − 141.6: PCC 0.96, MAE 3.6 | no closed form |
 
 ## Fields
@@ -48,9 +48,14 @@ always ~12 (11.5–12.3). So fluency is speed measured in passage letters (or so
 |---|---|---|---|---|---|---|---|---|---|---|
 | Mean fluency | 10–14 | 22 | 32 | 45 | 54 | 62 | 68 | 73 | 76 | 77–79 |
 
-Normalising by letters reaches PCC 0.90 with questions held out; each question's own best curve reaches 0.93, so
-about ±5 points depend on something not in these fields (likely pauses and rhythm in the audio). Above ~19 letters
-per second the score falls again.
+Normalising by letters reaches PCC 0.90 with questions held out; each question's own best curve reaches 0.93.
+Above ~19 letters per second the score falls again.
+
+Pauses do not count. On the audio of question 1519 (469 full answers, energy-based voice detection), pause counts,
+total pause time, the longest pause and leading/trailing silence add nothing once reading time is known
+(PCC 0.951 → 0.950). Pauses lower fluency only by making the reading longer. Part of the rest comes from sound
+quality: adding the mean sound score gives PCC 0.964 (MAE 4.0) on 1519 and 0.93 (MAE 5.3) with questions held out.
+The remaining ±4 points are not explained by any field or audio measure tried.
 
 ## Pronunciation
 
@@ -80,5 +85,5 @@ Content not counting fits Pearson's 2025 rule: Read Aloud counts only toward Spe
 
 - Other engine tags (all data is `S-ASIA V6i`).
 - Content at 10 missed words and levels 1 and 3; count or share (needs much shorter and longer passages).
-- The remaining ±5 points of fluency: needs the audio (pauses, rhythm).
+- The remaining ±4 points of fluency (not pauses: checked on audio).
 - Other Speaking tasks.
