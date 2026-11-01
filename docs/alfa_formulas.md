@@ -18,10 +18,10 @@ WRONG (red), **n** = G + A + R. "round" is round half up. All traits are on 0–
 | Read Aloud | **exact**: round(90·G/n) | **exact**: 90·(G + ½A − ½R)/n | approx.: content capped by speed | **exact**: 0.4·F + 0.6·P (Core 0.6·F + 0.4·P) |
 | Repeat Sentence | **exact**: lookup on (G, n) | **exact**: same as Read Aloud | approx.: green share × speed vs prompt | **exact**: same as Read Aloud |
 | Answer Short Question | **exact**: 1 if answer correct, else 0 | = content (5 or 0 out of 5) | = content | none |
-| Retell Lecture | 7 levels from keyword matches (~75%) | content − random 1–13 | not analysed yet | **exact (84%, 99.5% ±1)**: 0.6·S + 0.4·F, S = hidden value per level |
-| Summarize Group Discussion | 7 levels from keyword matches (~79%) | content − random 1–13 | not analysed yet | **exact (90%)**: 0.6·C + 0.4·F |
-| Describe Image | related to keyword matches, no fixed rule | content − random 0–18 | not analysed yet | 0.6·C + 0.4·F (Core 0.4·C + 0.6·F) |
-| Respond to a Situation | no keyword marks, no rule found (likely an AI judge) | content − random 0–19 | not analysed yet | **exact (83–90%)**: 0.6·C + 0.4·F |
+| Retell Lecture | 7 levels from keyword matches (~75%) | content − random 1–13 | **≈** min(90, 30·words/s) | **exact (84%, 99.5% ±1)**: 0.6·S + 0.4·F, S = hidden value per level |
+| Summarize Group Discussion | 7 levels from keyword matches (~79%) | content − random 1–13 | **≈** min(90, 34·words/s) | **exact (90%)**: 0.6·C + 0.4·F |
+| Describe Image | related to keyword matches, no fixed rule | content − random 0–18 | **≈** min(90, 30·words/s) | 0.6·C + 0.4·F (Core 0.4·C + 0.6·F) |
+| Respond to a Situation | no keyword marks, no rule found (likely an AI judge) | content − random 0–19 | **≈** min(90, 30·words/s) | **exact (83–90%)**: 0.6·C + 0.4·F |
 
 "exact" = the formula reproduces the source's number exactly for ≥ 97% of answers.
 
@@ -119,15 +119,24 @@ Our wav2vec2 pronunciation measure is a real measurement and will not match thes
 
 ### Fluency
 
-Not explained by transcript length, keyword counts or the pause marks (PCC 0.52–0.89 with a tree). Needs audio
-timing; next step.
+Speaking speed only: fluency ≈ min(90, k · transcript words / recording seconds). Pauses, pause marks and pause
+length add nothing once speed is known. Measured on ~1,700 answers per task (words from the source's transcript,
+seconds from the mp3):
+
+| Task | k | full 90 at | PCC | MAE | within ±2 |
+|---|---|---|---|---|---|
+| Describe Image | 30.4 | ~3.0 words/s (180 wpm) | 0.993 | 0.81 | 95% |
+| Retell Lecture | 30.3 | ~3.0 words/s | 0.993 | 0.84 | 93% |
+| Respond to a Situation | 30.3 | ~3.0 words/s | 0.988 | 0.88 | 94% |
+| Summarize Group Discussion | 34.0 | ~2.65 words/s | 0.990 | 0.86 | 93% |
+
+So k·words/s ≈ wpm/2 (wpm/1.76 for Summarize Group Discussion). Speaking faster always helps, whatever is said.
 
 ## Still open
 
 | Item | Next step |
 |---|---|
-| Open-task fluency | download ~2,000 answers per task, measure speech time, rate and pauses |
 | Exact fluency for Read Aloud / Repeat Sentence | try speech-time measures instead of file length |
 | Yellow words (case 2) | needs the source recogniser's word confidence; not available |
-| Retell Lecture / Summarize Group Discussion thresholds | model the per-question threshold as a share of the keyword list |
+| Retell Lecture / Summarize Group Discussion thresholds | with our rebuilt keyword lists the best is 74–78% exact, < 2% off by more than one level; the source's real lists are not in the crawl |
 | Describe Image content | test keyword weights and image-specific lists; otherwise a model or LLM |

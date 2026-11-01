@@ -115,7 +115,7 @@ Full detail for all seven tasks: [alfa_formulas.md](alfa_formulas.md).
 | Answer Short Question | content = fluency = 1 and "5 out of 5" exactly when the expected answer is tagged `[CORRECT]`; otherwise 0 / 0 / 0 |
 | Open-answer pronunciation | Not measured: pronunciation = content − an offset that does not correlate with anything (Retell Lecture, Summarize Group Discussion: mostly −5…−13, roughly uniform; Describe Image, Respond to a Situation: −1…−15) |
 | Open-answer content | Retell Lecture and Summarize Group Discussion: 7 levels only (18, 27, 45, 59, 68, 77, 90), a step function of the number of distinct matched keywords with per-question thresholds (75–79% exact from our match counts). Describe Image: related to keyword matches but no fixed rule (46%). Respond to a Situation: no keyword marks, no rule found from transcript counts (content PCC 0.31), likely a separate judge |
-| Open-answer fluency | Not explained by transcript counts or pause marks (PCC 0.52–0.89); needs audio timing, not analysed yet |
+| Open-answer fluency | ≈ min(90, 30 · words per second of recording) (Summarize Group Discussion: 34); pauses add nothing. See alfa_formulas.md |
 
 ## Data available (crawl of 31 Oct 2026)
 
