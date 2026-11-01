@@ -15,6 +15,7 @@ Runs offline on Apple Silicon (`mlx-whisper`). A `faster-whisper` backend for Li
 | [docs/plan.md](docs/plan.md) | scope, quality targets, compute and serving cost, timeline |
 | [docs/data_pipeline.md](docs/data_pipeline.md) | crawl → sample → download → extract → train → evaluate |
 | [docs/output_format.md](docs/output_format.md) | every field of the scoring result |
+| [docs/alfa_formulas.md](docs/alfa_formulas.md) | how the source scores each task: recovered formulas and open questions |
 
 ## How it works
 

@@ -13,3 +13,7 @@ samples/*.aiff
 # local one-off run scripts with machine paths
 scripts/run_round1.sh
 scripts/run_rs_round1.sh
+
+# credentials
+key/
+*.json.key

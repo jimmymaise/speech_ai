@@ -102,13 +102,20 @@ all apply it.
 
 ## Facts recovered from the source's data (206k Read Aloud answers)
 
+Full detail for all seven tasks: [alfa_formulas.md](alfa_formulas.md).
+
 | Fact | Detail |
 |---|---|
 | Speaking score from Read Aloud | Academic ≈ 0.405·fluency + 0.583·pronunciation − 0.17; Core ≈ 0.600·fluency + 0.396·pronunciation − 0.10. Content barely counts (it goes to Reading). Mean error < 0.4 points |
 | "x out of 5" pronunciation | A banding of the 0–90 pronunciation: ≥88 → 5, ≥84 → 4.5, ≥76 → 4, ≥65 → 3.5, ≥55 → 3, ≥35 → 2.5, ≥7 → 2 |
-| Word colours | Mostly "was the word read" (83% agreement from that alone), plus some pronunciation |
+| Word colours | Mostly "was the word read" (83% agreement from that alone), plus some pronunciation. WRONG ≈ word missing from the source's `google_transcript` (97% of WRONG words, 2% of CORRECT words) |
+| Trait formulas (`scripts/alfa_formulas.py`) | G/A/R = CORRECT/AVERAGE/WRONG words, n = G+A+R. Pronunciation (both tasks) = clip(round(90·(G + 0.5A − 0.5R)/n), 0, 90): 98–99.6% exact. Read Aloud content = round(90·G/n): 98% exact. Repeat Sentence content = fixed lookup on (G, n): 99.9% exact. Read Aloud fluency ≈ min(content, 35.8·G / recording seconds): PCC 0.987, MAE 2.1. Repeat Sentence fluency depends on the green share G/n and on the answer length relative to the prompt audio length (full fluency while the answer is ≤ ~1.3× the prompt and G/n ≥ ~0.8; it drops as either worsens). No closed form yet; a small tree on (G, n, recording seconds, prompt seconds) reaches PCC 0.992, MAE 1.6 (without prompt seconds: 0.967) |
 | Pause marks | Mid-phrase pauses; the number of `/` grows with the pause length |
-| Open-answer content | Number of distinct matched keywords correlates 0.70–0.80 with content (Describe Image, Retell Lecture, Respond to a Situation). Summarize Group Discussion has no keyword marks |
+| Crawl folder names | `respond_to_situation/` holds Summarize Group Discussion questions (group-discussion transcript, ~200-word answers) and `summarize_group_discussion/` holds Respond to a Situation (situation prompt, ~85-word answers). Read the two as swapped |
+| Answer Short Question | content = fluency = 1 and "5 out of 5" exactly when the expected answer is tagged `[CORRECT]`; otherwise 0 / 0 / 0 |
+| Open-answer pronunciation | Not measured: pronunciation = content − an offset that does not correlate with anything (Retell Lecture, Summarize Group Discussion: mostly −5…−13, roughly uniform; Describe Image, Respond to a Situation: −1…−15) |
+| Open-answer content | Retell Lecture and Summarize Group Discussion: 7 levels only (18, 27, 45, 59, 68, 77, 90), a step function of the number of distinct matched keywords with per-question thresholds (75–79% exact from our match counts). Describe Image: related to keyword matches but no fixed rule (46%). Respond to a Situation: no keyword marks, no rule found from transcript counts (content PCC 0.31), likely a separate judge |
+| Open-answer fluency | Not explained by transcript counts or pause marks (PCC 0.52–0.89); needs audio timing, not analysed yet |
 
 ## Data available (crawl of 31 Oct 2026)
 

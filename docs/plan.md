@@ -14,10 +14,10 @@ word-level feedback. Then improve beyond Alfa with real PTE score reports and te
 | Read Aloud | Word accuracy vs passage, fluency, pronunciation, word highlighting | Pilot done; full-data run in progress |
 | Repeat Sentence | Same pipeline as Read Aloud | Feature extraction in progress |
 | Answer Short Question | Expected answer found in the transcript | Next |
-| Respond to a Situation | Keyword coverage + fluency + pronunciation | Text-only content test: 0.94 correlation |
+| Respond to a Situation | Meaning similarity + fluency + pronunciation (no keyword marks in the source) | Text-only content test: 0.74 |
 | Retell Lecture | Keyword coverage + fluency + pronunciation | Text-only content test: 0.85 |
 | Describe Image | Keyword coverage + fluency + pronunciation | Text-only content test: 0.75 |
-| Summarize Group Discussion | Meaning similarity + fluency + pronunciation | Text-only content test: 0.74 |
+| Summarize Group Discussion | Keyword coverage + fluency + pronunciation | Text-only content test: 0.94 correlation |
 
 Keyword lists per question are rebuilt from the words Alfa marked as matched across all answers to that question.
 New questions need a list built from the reference text or by an LLM.
