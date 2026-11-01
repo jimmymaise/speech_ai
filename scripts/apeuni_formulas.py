@@ -1,16 +1,19 @@
 """Check the formulas recovered for APEUni's Read Aloud scores (see docs/apeuni_formulas.md).
 
-Input: a decoded APEUni `answers/list` dump, {"answers": [...]} (one or many pages merged).
+Input: a folder with one sub-folder per question (`<id>/answers.json` + `<id>/questions.json`),
+or a single decoded `answers.json`.
 
-    python scripts/apeuni_formulas.py /path/to/answers-1519/answers.json
+    python scripts/apeuni_formulas.py /path/to/read_aloud
 """
+import os
 import argparse
 import json
 
 import numpy as np
 import pandas as pd
+from sklearn.ensemble import GradientBoostingRegressor
 from sklearn.linear_model import LinearRegression
-from sklearn.model_selection import cross_val_predict
+from sklearn.model_selection import GroupKFold, cross_val_predict
 
 WORD_K = 83  # word score = floor(83 * ai_score)
 SOUND_GOOD, SOUND_AVG = 80, 70
@@ -26,13 +29,41 @@ def word_score(ai_score):
 
 
 def read_aloud_score(content, pronunciation, fluency):
-    """Content (0-5) is a gate: 5 -> (P+F)/2, 4 -> x0.9, 0 -> 10. Levels 1-3 not seen."""
+    """Content (0-5) is a gate: 5 -> (P+F)/2, 4 -> x0.9, 2 -> x0.55, 0 -> 10. Levels 1 and 3 not seen."""
     base = (np.asarray(pronunciation) + np.asarray(fluency)) / 2
-    factor = np.select([content >= 5, content == 4], [1.0, 0.9], default=np.nan)
+    factor = np.select([content >= 5, content == 4, content == 2], [1.0, 0.9, 0.55], default=np.nan)
     return np.where(content == 0, 10, np.floor(base * factor + 0.5))
 
 
+def answer_files(path):
+    if os.path.isfile(path):
+        return [(None, path)]
+    out = []
+    for q in sorted(os.listdir(path)):
+        f = os.path.join(path, q, "answers.json")
+        if q.isdigit() and os.path.exists(f):
+            out.append((int(q), f))
+    return out
+
+
+def passage_letters(answers_path):
+    qf = os.path.join(os.path.dirname(answers_path), "questions.json")
+    if not os.path.exists(qf):
+        return np.nan
+    return sum(ch.isalpha() for ch in json.load(open(qf)).get("prediction_text", ""))
+
+
 def flatten(path):
+    rows, words = [], []
+    for qid, f in answer_files(path):
+        letters = passage_letters(f)
+        rows_q, words_q = flatten_one(f, qid, letters)
+        rows += rows_q
+        words += words_q
+    return pd.DataFrame(rows), words
+
+
+def flatten_one(path, qid, letters):
     d = json.load(open(path))
     rows, words = [], []
     for x in d["answers"]:
@@ -45,12 +76,12 @@ def flatten(path):
         dur = np.array([(t["end_pos"] - t["beg_pos"]) / 100 for t in cw])
         ph = np.array([s["score"] for t in cw for s in t["syllables"]])
         rows.append(dict(
-            total=a["total_score"], C=c["content"]["score"], P=c["pronunciation"]["score"], F=c["fluency"]["score"],
+            q=qid, letters=letters, total=a["total_score"], C=c["content"]["score"], P=c["pronunciation"]["score"], F=c["fluency"]["score"],
             engine=a["algo_version_tag"]["tag_name"], n_words=len(cw),
             n_omit=sum(t["type"] == "omission" for t in det),
             seconds=dur.sum() if len(cw) else np.nan, sound_mean=ph.mean() if len(ph) else np.nan,
         ))
-    return pd.DataFrame(rows), words
+    return rows, words
 
 
 def main():
@@ -70,10 +101,18 @@ def main():
         print(f"Read Aloud score, content {c}: {g.ok.mean():.1%} of {len(g)}")
     print("content by omitted words:", df.groupby("C").n_omit.agg(["min", "max"]).to_dict("index"))
 
-    full = df[(df.C == 5) & (df.n_words == df.n_words.max())].dropna()
-    for target, cols in [("F", ["seconds"]), ("P", ["sound_mean", "F"])]:
-        p = cross_val_predict(LinearRegression(), full[cols], full[target], cv=5)
-        print(f"{target} ~ {cols}: PCC {np.corrcoef(p, full[target])[0, 1]:.3f}, MAE {np.abs(p - full[target]).mean():.2f}")
+    full = df[(df.C == 5) & (df.n_omit == 0)].dropna(subset=["seconds", "sound_mean"]).copy()
+    full["letters_per_s"] = full.letters / full.seconds
+    groups = full.q.fillna(0)
+    cv = GroupKFold(groups.nunique()) if groups.nunique() > 1 else 5
+    for target, cols, model in [
+        ("F", ["letters_per_s"], GradientBoostingRegressor(n_estimators=200, max_depth=2, learning_rate=0.05)),
+        ("P", ["sound_mean", "F"], LinearRegression()),
+    ]:
+        x = full.dropna(subset=cols)
+        p = cross_val_predict(model, x[cols], x[target], cv=cv, groups=groups.loc[x.index])
+        print(f"{target} ~ {cols} (questions held out): PCC {np.corrcoef(p, x[target])[0, 1]:.3f}, "
+              f"MAE {np.abs(p - x[target]).mean():.2f}")
 
 
 if __name__ == "__main__":
