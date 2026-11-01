@@ -1,4 +1,4 @@
-# APEUni: recovered Read Aloud formulas
+# APEUni: recovered Read Aloud and Repeat Sentence formulas
 
 Separate from Alfa ([alfa_formulas.md](alfa_formulas.md)). Data: 3,998 decoded APEUni answers to 8 Read Aloud
 questions (ids 1506–1519, 51–64 words, ~500 answers each), all scored by engine tag `RA S-ASIA V6i`.
@@ -86,4 +86,62 @@ Content not counting fits Pearson's 2025 rule: Read Aloud counts only toward Spe
 - Other engine tags (all data is `S-ASIA V6i`).
 - Content at 10 missed words and levels 1 and 3; count or share (needs much shorter and longer passages).
 - The remaining ±4 points of fluency (not pauses: checked on audio).
-- Other Speaking tasks.
+- Other Speaking tasks (Repeat Sentence below).
+
+# Repeat Sentence
+
+Data: 2,500 answers to 5 sentences (ids 3404–3411, 7–13 words, prompt audio 2.8–4.9 s), engine `RS S-ASIA V3`,
+plus the audio of all 2,500 answers and the 5 prompts. The format differs from Read Aloud: content is 0–3 in steps
+of 0.1, there is a `recognized_text`, words are `content_word` (score 0–100 with decimals), `omission` or
+`incorrect_order`, and there are no sound scores or word timings.
+
+| Part | Rule | Match |
+|---|---|---|
+| Content (0–3) | 3 − the sum of per-word penalties for missed or out-of-order words; function words cost much less than content words | MAE 0.00–0.02 with ≤ 3 words missed (per-sentence weights) |
+| Repeat Sentence score, content 3/3 | ≈ 47 + 0.242 × (P + F) | 76% exact, 100% within 1 |
+| Repeat Sentence score, content < 3 | base and weight on P + F both fall with content | model on C, P, F: MAE 1.1 |
+| Pronunciation | word scores + fluency (word mean alone: PCC 0.33) | PCC 0.88–0.90, MAE 3.4–3.7 |
+| Fluency | mostly content and word scores; speed and pauses matter little | PCC 0.82, MAE 5.5 |
+
+## Content weights
+
+Penalty per missed word, fitted per sentence:
+
+| Sentence | Function word | Content word |
+|---|---|---|
+| The supermarket is located near the theater. | 0.10–0.12 | 0.39–0.43 |
+| The school provides hot lunches for students. | 0.14 | 0.32–0.36 |
+| The telephone booths are available for all employees in the office. | 0.06–0.08 | 0.24–0.26 |
+| Your application for accommodation must be submitted before the course starts. | 0.10 | 0.20 |
+| Lack of citation and evidence in an article will be regarded as plagiarism. | 0.07–0.11 | 0.20–0.22 |
+
+A content word is worth 2–4 function words, varying by sentence, so the weights likely come from a word-importance
+model. Penalties for all words add up to about 2, not 3, and with many words missed the score falls faster than
+the sum (minimum seen 0.2). Words said out of order cost the same as missed words. This is finer than Pearson's
+rule (3 = all words in sequence, 2 = ≥ 50%, 1 = < 50%, 0 = almost nothing) and worth copying.
+
+## Fluency
+
+Checked on all 2,500 recordings with energy-based voice detection, against the prompt length.
+
+| Inputs (sentences held out) | PCC | MAE |
+|---|---|---|
+| Letters per second of speech | 0.16 | 8.8 |
+| Answer length ÷ prompt length | 0.20 | 8.7 |
+| + pauses, leading silence | 0.22 | 8.9 |
+| Content, words repeated, mean word score | 0.81 | 5.6 |
+| All | 0.82 | 5.5 |
+
+With full content, fluency moves only from ~77 (answer shorter than the prompt) to ~69 (more than 1.5× the
+prompt), and the mean differs by sentence (69–80). Unlike Read Aloud, Repeat Sentence fluency is not a speed score;
+it follows how much was repeated and how well, and the rest (±5) is not explained by timing or pauses. It is likely
+a learned model.
+
+## Read Aloud vs Repeat Sentence
+
+| | Read Aloud | Repeat Sentence |
+|---|---|---|
+| Content | missed-word count, gate only | weighted words, part of the score |
+| Score | (P + F) / 2 | ≈ 47 + 0.24 (P + F) at full content |
+| Pronunciation | sound scores + fluency | word scores + fluency |
+| Fluency | letters per second; pauses do not count | mostly content and word scores; speed and pauses matter little |

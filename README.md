@@ -16,7 +16,7 @@ Runs offline on Apple Silicon (`mlx-whisper`). A `faster-whisper` backend for Li
 | [docs/data_pipeline.md](docs/data_pipeline.md) | crawl → sample → download → extract → train → evaluate |
 | [docs/output_format.md](docs/output_format.md) | every field of the scoring result |
 | [docs/alfa_formulas.md](docs/alfa_formulas.md) | how the source scores each task: recovered formulas and open questions |
-| [docs/apeuni_formulas.md](docs/apeuni_formulas.md) | how APEUni scores Read Aloud (separate from the source above) |
+| [docs/apeuni_formulas.md](docs/apeuni_formulas.md) | how APEUni scores Read Aloud and Repeat Sentence (separate from the source above) |
 | [docs/read_aloud_design.md](docs/read_aloud_design.md) | Read Aloud v2 design: what to keep and avoid from Alfa and APEUni, components, output modes, validation |
 
 ## How it works
