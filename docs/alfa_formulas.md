@@ -132,6 +132,43 @@ seconds from the mp3):
 
 So k·words/s ≈ wpm/2 (wpm/1.76 for Summarize Group Discussion). Speaking faster always helps, whatever is said.
 
+## PTE Core
+
+Same content, pronunciation and fluency formulas as Academic; only the speaking-score weights differ (fluency 60% on
+three tasks). Core has five Speaking tasks (no Retell Lecture, no Summarize Group Discussion), as in Pearson's Core
+score guide.
+
+| Task | Core answers | Content / pronunciation / fluency | Speaking, Core | Speaking, Academic |
+|---|---|---|---|---|
+| Read Aloud | 69,543 | same: content 97.2%, pronunciation 97.5% exact | 0.6·F + 0.4·P | 0.4·F + 0.6·P |
+| Repeat Sentence | 3,828 | same: 100% exact | 0.6·F + 0.4·P | 0.4·F + 0.6·P |
+| Describe Image | 9,410 | same: fluency k = 30.2, pronunciation = content − 7.4 on average | 0.4·C + 0.6·F | 0.6·C + 0.4·F |
+| Respond to a Situation | 15,562 | same: fluency k = 30.3, pronunciation = content − 7.7 on average | 0.6·C + 0.4·F | 0.6·C + 0.4·F |
+| Answer Short Question | | same: 1 if correct, else 0 | none | none |
+
+Pearson scores Respond to a Situation on Appropriacy (0–3: function, register, politeness, detail), not content.
+In our scorer only the speaking weights depend on `pte_type`.
+
+## Comparison with the official PTE scoring
+
+Alfa follows Pearson's content rules for Read Aloud, Repeat Sentence and Answer Short Question; its pronunciation and
+fluency are far simpler than Pearson's rubrics. Pearson scores with automated systems trained on expert ratings.
+
+| Trait | Pearson's criteria | Alfa | Alignment |
+|---|---|---|---|
+| Read Aloud content | each replaced, omitted or inserted word = one error; pauses ignored | 90 × green share; insertions not counted | mostly aligned |
+| Repeat Sentence content | 0–3: all words in sequence = 3; ≥ 50% = 2; < 50% = 1; almost nothing = 0 | lookup on green share; 50% → 59; order not checked | mostly aligned, finer steps |
+| Answer Short Question | vocabulary 1 / 0 only | 1 / 0; fluency and pronunciation shown equal to content | aligned |
+| Pronunciation | 0–5: vowels, consonants, word and sentence stress, intelligibility | share of recognised words; open tasks: content − random | not aligned |
+| Fluency | 0–5: rhythm, phrasing, hesitations, repetitions, false starts, long pauses | speaking speed | not aligned |
+| Describe Image, Retell Lecture content | 0–5: key elements, relationships, development, implications, conclusions | keyword matches, 7 levels | partly aligned |
+| Respond to a Situation | Appropriacy 0–3 | no rule found | unknown |
+| Summarize Group Discussion | not in the guides read (added 2025) | keyword levels | unknown |
+| Speaking weights | not published per item | 0.6 × main + 0.4 × fluency | cannot compare |
+
+Sources: [PTE Core Test Taker Score Guide](https://www.pearsonpte.com/ctf-assets/yqwtwibiobs4/4YEY3FefBoAMjxZ94QkBP4/bc9c70ebbfc7b249ad6d21195e8ed0fc/PTE_Core_Score_Guide_Jan_24_V1.pdf),
+[PTE Academic Score Guide for Test Takers, April 2021 V15](https://assets.ctfassets.net/yqwtwibiobs4/5Sz9Ur4qbus8AEOQdetkAj/35d66f4a81484b8f9cf87641cf668340/PTE_Score_Guide_for_Test_Takers_-_April_2021_V15.pdf).
+
 ## Still open
 
 | Item | Next step |
