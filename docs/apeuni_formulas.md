@@ -145,3 +145,20 @@ a learned model.
 | Score | (P + F) / 2 | ≈ 47 + 0.24 (P + F) at full content |
 | Pronunciation | sound scores + fluency | word scores + fluency |
 | Fluency | letters per second; pauses do not count | mostly content and word scores; speed and pauses matter little |
+
+## Repeat Sentence: status and data needed
+
+| Part | Status |
+|---|---|
+| Content (0–3) | Rule known (3 − per-word penalties); weights known for the 5 sentences, not how APEUni sets them for a new sentence |
+| Score, content 3/3 | Formula: ≈ 47 + 0.242 × (P + F), always within 1 |
+| Score, content < 3 | Model only (MAE 1.1) |
+| Pronunciation, fluency | Likely APEUni's own trained models; approximations only (±3.5, ±5.5) |
+
+Data that would improve it (answers JSON + `questions.json` only; no answer audio needed):
+
+1. 15–20 more sentences, 200–300 answers each, mixed lengths (5–15 words) and vocabulary. Enough words to learn how
+   the per-word weight is set (function vs content word, word frequency, length, position).
+2. Sentences where many students miss words (long or hard ones), to pin down how content falls when most words are
+   missed and the score formula for content < 3.
+3. Any answers with an engine tag other than `RS S-ASIA V3`.
