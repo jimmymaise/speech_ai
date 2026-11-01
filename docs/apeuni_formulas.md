@@ -191,7 +191,7 @@ Fits hold out whole lectures (13).
 | Describe Image | 2,500 answers, 5 images | `DI S-ASIA V3` | content 0–6, P and F 0–90 |
 | Respond to a Situation | 900 answers, 3 situations | `RTS S-ASIA V2.1` | content 0–6, P and F 0–90 |
 | Summarize Group Discussion | 900 answers, 3 discussions | `SGD S-ASIA V3` | content 0–6, P and F 0–5 |
-| Answer Short Question | 300 answers, 1 question | none | content 0–1 |
+| Answer Short Question | 1,500 answers, 5 questions | none | content 0–1 |
 
 Word and sound scores in Describe Image and Summarize Group Discussion follow the Read Aloud rules. Respond to a
 Situation gives each spoken word a 0–100 score and a 0–1 `tc_fluency`, with `tc_pronun` and `tc_fluency` totals.
@@ -210,7 +210,7 @@ Situation gives each spoken word a 0–100 score and a 0–1 `tc_fluency`, with 
 | Task | Rule | Match |
 |---|---|---|
 | Respond to a Situation | **word count only**: min(6, round(0.12 × words, 1)); 50+ words → 6 | 98.9% exact, 99.3% within 0.1 |
-| Answer Short Question | 1 if the exact expected word is in the transcript (extra words allowed; "forks" for "fork" fails) | 300 / 300 |
+| Answer Short Question | 1 if **any single word** of the answer key is in the transcript (key split on `/` and spaces; extra words allowed; no stemming, so "forks" for "fork" fails) | 1,500 / 1,500 |
 | Describe Image | not keywords (overlap with the sample answer: PCC 0.13) nor length (0.41); likely an AI judge | — |
 | Summarize Group Discussion | partly keywords and length (PCC 0.69); comment "Good content." when content ≥ 5 | — |
 
@@ -230,4 +230,7 @@ Fits hold out whole questions.
   ignores content in the score.
 - Respond to a Situation: Pearson's content asks whether the response handles the situation. APEUni's content is
   the word count: 50 words on anything earn full content.
-- Answer Short Question: matches Pearson's correct / incorrect vocabulary rule, but is stricter on word form.
+- Answer Short Question: same correct / incorrect shape as Pearson, but the matching is crude. Every word of a
+  multi-word key counts on its own, including "a": for "A black eye / bruise", the answers "a bruce", "it may be a
+  little pinch of water" and "gotta be a bitch" all score 1. Plurals are not accepted unless listed ("photos" is
+  listed, "forks" is not). Answers listing several options ("spoon and fork") also score 1.
