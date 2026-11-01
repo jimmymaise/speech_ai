@@ -1,4 +1,4 @@
-# APEUni: recovered Speaking formulas (Read Aloud, Repeat Sentence, Retell Lecture)
+# APEUni: recovered Speaking formulas (all seven tasks)
 
 Separate from Alfa ([alfa_formulas.md](alfa_formulas.md)). Data: 3,998 decoded APEUni answers to 8 Read Aloud
 questions (ids 1506–1519, 51–64 words, ~500 answers each), all scored by engine tag `RA S-ASIA V6i`.
@@ -183,3 +183,51 @@ their content. Pearson's guide makes content the first gate for Retell Lecture (
 human expert review it; APEUni does the opposite.
 
 Fits hold out whole lectures. With 3 lectures, content and fluency results are less certain than for Read Aloud.
+
+# Describe Image, Respond to a Situation, Summarize Group Discussion, Answer Short Question
+
+| Task | Data | Engine | Scales |
+|---|---|---|---|
+| Describe Image | 2,500 answers, 5 images | `DI S-ASIA V3` | content 0–6, P and F 0–90 |
+| Respond to a Situation | 900 answers, 3 situations | `RTS S-ASIA V2.1` | content 0–6, P and F 0–90 |
+| Summarize Group Discussion | 900 answers, 3 discussions | `SGD S-ASIA V3` | content 0–6, P and F 0–5 |
+| Answer Short Question | 300 answers, 1 question | none | content 0–1 |
+
+Word and sound scores in Describe Image and Summarize Group Discussion follow the Read Aloud rules. Respond to a
+Situation gives each spoken word a 0–100 score and a 0–1 `tc_fluency`, with `tc_pronun` and `tc_fluency` totals.
+
+## Task score
+
+| Task | Rule | Match |
+|---|---|---|
+| Describe Image | (P + F) / 2; content is not used at all | 99.1% exact, 99.9% within 1 |
+| Respond to a Situation | (P + F) / 2 × content / 6 | 95% exact, 100% within 1 |
+| Summarize Group Discussion | no clean rule; content, P and F all count | best model MAE 3.5–4.0 |
+| Answer Short Question | = content (0 or 1) | 100% |
+
+## Content
+
+| Task | Rule | Match |
+|---|---|---|
+| Respond to a Situation | **word count only**: min(6, round(0.12 × words, 1)); 50+ words → 6 | 98.9% exact, 99.3% within 0.1 |
+| Answer Short Question | 1 if the exact expected word is in the transcript (extra words allowed; "forks" for "fork" fails) | 300 / 300 |
+| Describe Image | not keywords (overlap with the sample answer: PCC 0.13) nor length (0.41); likely an AI judge | — |
+| Summarize Group Discussion | partly keywords and length (PCC 0.69); comment "Good content." when content ≥ 5 | — |
+
+## Pronunciation and fluency
+
+| Task | Pronunciation | Fluency |
+|---|---|---|
+| Describe Image | sound mean + F: PCC 0.84 | speech rate, timing: 0.70; + pronunciation and content: 0.79 |
+| Respond to a Situation | word mean + F: PCC 0.94 | `tc_fluency` and timing: 0.90 |
+| Summarize Group Discussion | sound mean (+ F): PCC 0.91–0.93 | timing: 0.65; + pronunciation and content: 0.81 |
+
+Fits hold out whole questions.
+
+## Against Pearson's rules
+
+- Describe Image: Pearson scores content first and gives no score when it is 0 (and a human reviews it). APEUni
+  ignores content in the score.
+- Respond to a Situation: Pearson's content asks whether the response handles the situation. APEUni's content is
+  the word count: 50 words on anything earn full content.
+- Answer Short Question: matches Pearson's correct / incorrect vocabulary rule, but is stricter on word form.
