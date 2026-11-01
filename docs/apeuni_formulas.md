@@ -1,4 +1,4 @@
-# APEUni: recovered Read Aloud and Repeat Sentence formulas
+# APEUni: recovered Speaking formulas (Read Aloud, Repeat Sentence, Retell Lecture)
 
 Separate from Alfa ([alfa_formulas.md](alfa_formulas.md)). Data: 3,998 decoded APEUni answers to 8 Read Aloud
 questions (ids 1506–1519, 51–64 words, ~500 answers each), all scored by engine tag `RA S-ASIA V6i`.
@@ -162,3 +162,24 @@ Data that would improve it (answers JSON + `questions.json` only; no answer audi
 2. Sentences where many students miss words (long or hard ones), to pin down how content falls when most words are
    missed and the score formula for content < 3.
 3. Any answers with an engine tag other than `RS S-ASIA V3`.
+
+# Retell Lecture
+
+Data: 900 answers to 3 lectures (ids 717, 723, 724; 300 each), engine `RL S-ASIA V3.1`. Traits are on PTE scales:
+content 0–6, pronunciation 0–5, fluency 0–5, all in steps of 0.1. `prediction_text` is the lecture transcript,
+`recognized_text` the student's transcript. Words are what the student said (no reference passage) with timings and
+sound scores, scored like Read Aloud (`floor(83 × ai_score)`, 100% of 71,481 words).
+
+| Part | Rule | Match |
+|---|---|---|
+| Retell Lecture score, content ≥ 4 | 10 + 8 × (P + F) | 77% exact, 94% within 1 (all answers) |
+| Content < 4 | a small cut: the 8 drops to ~7.6 at content 2 and ~6.7 near 0 | MAE 0.5 overall |
+| Content (0–6) | not keywords or length; likely a semantic or LLM judge. Comment "Good content." exactly when content ≥ 5 | keyword overlap PCC 0.52; with P and F 0.75 |
+| Pronunciation (0–5) | mean sound score + fluency, like Read Aloud | PCC 0.90, MAE 0.35 |
+| Fluency (0–5) | words per second plus long words (pauses inside word timings), length and sound quality | PCC 0.78, MAE 0.44 |
+
+Content counts very little in the score: two answers with the same P and F differ by at most a few points whatever
+their content. Pearson's guide makes content the first gate for Retell Lecture (content 0 → no score) and has a
+human expert review it; APEUni does the opposite.
+
+Fits hold out whole lectures. With 3 lectures, content and fluency results are less certain than for Read Aloud.
