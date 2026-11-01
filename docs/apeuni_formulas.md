@@ -2,7 +2,7 @@
 
 Separate from Alfa ([alfa_formulas.md](alfa_formulas.md)). Data: 3,998 decoded APEUni answers to 8 Read Aloud
 questions (ids 1506–1519, 51–64 words, ~500 answers each), all scored by engine tag `RA S-ASIA V6i`.
-Fits are checked with whole questions held out. Run `python scripts/apeuni_formulas.py <read_aloud folder>`.
+Fits are checked with whole questions held out. Run `python scripts/apeuni_formulas.py <read_aloud folder>`; other tasks: [scripts/apeuni/](../scripts/apeuni/README.md).
 
 ## Summary
 
