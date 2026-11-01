@@ -190,7 +190,7 @@ Fits hold out whole lectures (13).
 |---|---|---|---|
 | Describe Image | 2,500 answers, 5 images | `DI S-ASIA V3` | content 0–6, P and F 0–90 |
 | Respond to a Situation | 900 answers, 3 situations | `RTS S-ASIA V2.1` | content 0–6, P and F 0–90 |
-| Summarize Group Discussion | 900 answers, 3 discussions | `SGD S-ASIA V3` | content 0–6, P and F 0–5 |
+| Summarize Group Discussion | 3,705 answers, 13 discussions | `SGD S-ASIA V3` | content 0–6, P and F 0–5 |
 | Answer Short Question | 1,500 answers, 5 questions | none | content 0–1 |
 
 Word and sound scores in Describe Image and Summarize Group Discussion follow the Read Aloud rules. Respond to a
@@ -202,7 +202,7 @@ Situation gives each spoken word a 0–100 score and a 0–1 `tc_fluency`, with 
 |---|---|---|
 | Describe Image | (P + F) / 2; content is not used at all | 99.1% exact, 99.9% within 1 |
 | Respond to a Situation | (P + F) / 2 × content / 6 | 95% exact, 100% within 1 |
-| Summarize Group Discussion | no clean rule; content, P and F all count | best model MAE 3.5–4.0 |
+| Summarize Group Discussion | no rule from the shown scores: not a function of C, P and F (best model MAE 3.6, PCC 0.92); adding every other field reaches MAE 3.0, PCC 0.94, and no single field closes the gap. APEUni's own note says "The total score is not a simple sum of component scores": the total is a separate model | — |
 | Answer Short Question | = content (0 or 1) | 100% |
 
 ## Content
@@ -212,7 +212,7 @@ Situation gives each spoken word a 0–100 score and a 0–1 `tc_fluency`, with 
 | Respond to a Situation | **word count only**: min(6, round(0.12 × words, 1)); 50+ words → 6 | 98.9% exact, 99.3% within 0.1 |
 | Answer Short Question | 1 if **any single word** of the answer key is in the transcript (key split on `/` and spaces; extra words allowed; no stemming, so "forks" for "fork" fails) | 1,500 / 1,500 |
 | Describe Image | not keywords (overlap with the sample answer: PCC 0.13) nor length (0.41); likely an AI judge | — |
-| Summarize Group Discussion | partly keywords and length (PCC 0.69); comment "Good content." when content ≥ 5 | — |
+| Summarize Group Discussion | partly keywords and length (PCC 0.67); comment "Good content." when content ≥ 5 | — |
 
 ## Pronunciation and fluency
 
@@ -220,7 +220,7 @@ Situation gives each spoken word a 0–100 score and a 0–1 `tc_fluency`, with 
 |---|---|---|
 | Describe Image | sound mean + F: PCC 0.84 | speech rate, timing: 0.70; + pronunciation and content: 0.79 |
 | Respond to a Situation | word mean + F: PCC 0.94 | `tc_fluency` and timing: 0.90 |
-| Summarize Group Discussion | sound mean (+ F): PCC 0.91–0.93 | timing: 0.65; + pronunciation and content: 0.81 |
+| Summarize Group Discussion | sound mean (+ F): PCC 0.90–0.91 | timing: 0.59; + pronunciation and content: 0.78 |
 
 Fits hold out whole questions.
 
