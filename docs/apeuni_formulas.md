@@ -165,24 +165,24 @@ Data that would improve it (answers JSON + `questions.json` only; no answer audi
 
 # Retell Lecture
 
-Data: 900 answers to 3 lectures (ids 717, 723, 724; 300 each), engine `RL S-ASIA V3.1`. Traits are on PTE scales:
+Data: 3,900 answers to 13 lectures (ids 688–724, 300 each), engine `RL S-ASIA V3.1`. Traits are on PTE scales:
 content 0–6, pronunciation 0–5, fluency 0–5, all in steps of 0.1. `prediction_text` is the lecture transcript,
 `recognized_text` the student's transcript. Words are what the student said (no reference passage) with timings and
-sound scores, scored like Read Aloud (`floor(83 × ai_score)`, 100% of 71,481 words).
+sound scores, scored like Read Aloud (`floor(83 × ai_score)`).
 
 | Part | Rule | Match |
 |---|---|---|
-| Retell Lecture score, content ≥ 4 | 10 + 8 × (P + F) | 77% exact, 94% within 1 (all answers) |
+| Retell Lecture score, content ≥ 4 | 10 + 8 × (P + F) | 83% exact, 99.6% within 1 (all answers: 79%, 97%) |
 | Content < 4 | a small cut: the 8 drops to ~7.6 at content 2 and ~6.7 near 0 | MAE 0.5 overall |
-| Content (0–6) | not keywords or length; likely a semantic or LLM judge. Comment "Good content." exactly when content ≥ 5 | keyword overlap PCC 0.52; with P and F 0.75 |
+| Content (0–6) | not keywords or length; likely a semantic or LLM judge. Comment "Good content." exactly when content ≥ 5 | keyword overlap PCC 0.50; + length 0.68; + P, F 0.76 |
 | Pronunciation (0–5) | mean sound score + fluency, like Read Aloud | PCC 0.90, MAE 0.35 |
-| Fluency (0–5) | words per second plus long words (pauses inside word timings), length and sound quality | PCC 0.78, MAE 0.44 |
+| Fluency (0–5) | words per second plus long words (pauses inside word timings), length and sound quality | PCC 0.76, MAE 0.43 |
 
 Content counts very little in the score: two answers with the same P and F differ by at most a few points whatever
 their content. Pearson's guide makes content the first gate for Retell Lecture (content 0 → no score) and has a
 human expert review it; APEUni does the opposite.
 
-Fits hold out whole lectures. With 3 lectures, content and fluency results are less certain than for Read Aloud.
+Fits hold out whole lectures (13).
 
 # Describe Image, Respond to a Situation, Summarize Group Discussion, Answer Short Question
 
